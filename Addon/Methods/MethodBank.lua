@@ -10,7 +10,7 @@ local GC = GuildContributionsAddonContainer
 local CLASS = GC.MethodManualClass()
 GC.MethodBankClass = CLASS
 
-local DEFAULT_AMOUNT = 0
+local DEFAULT_AMOUNT = 1
 
 function CLASS:Initialize( aGuildName, aGuildSettings )
     GC.MethodManualClass.Initialize( self, aGuildName, aGuildSettings )
