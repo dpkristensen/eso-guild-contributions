@@ -95,6 +95,20 @@ function CLASS:ParseNumberArg( aOption, aValue )
         return false
     end
 
+    -- Check against min limit
+    if( ( aOption.min ~= nil ) and
+        ( numValue < aOption.min ) ) then
+        self:ShowBadInput( aOption, numValue )
+        return false
+    end
+
+    -- Check against max limit
+    if( ( aOption.max ~= nil ) and
+        ( numValue > aOption.max ) ) then
+        self:ShowBadInput( aOption, numValue )
+        return false
+    end
+
     -- If we didn't already, check to make sure it is in the lookup table
     if( ( aOption.lookupTable ~= nil ) and
         ( not foundInLookupTable ) ) then
