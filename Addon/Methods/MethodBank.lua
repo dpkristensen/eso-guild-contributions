@@ -37,7 +37,7 @@ function CLASS:ReportContribution( aRule )
         return
     end
 
-    if( GetInteractionType() ~= INTERACTION_GUILDBANK ) then
+    if( GC.IsGuildBankAvailable() ) then
         GC.MsgP( "CONTRIBUTION_FAILED", GC.S( "HELP_OPEN_GUILD_BANK" ) )
         return
     end

@@ -14,6 +14,13 @@ local nINSET = INSET * -1
 local SPC = 12
 local nSPC = SPC * -1
 
+local GUI_STATE_EVENT = {
+    [EVENT_ACTION_LAYER_POPPED] = true,
+    [EVENT_ACTION_LAYER_PUSHED] = true,
+    [EVENT_CLOSE_GUILD_BANK] = true,
+    [EVENT_OPEN_GUILD_BANK] = true,
+}
+
 function CLASS:Initialize( aDb )
     self.Db = aDb
 
@@ -39,12 +46,10 @@ local function SetBtnTextures( aBtn, aTex )
     aBtn:SetNormalTexture( aTex.normal )
 end
 
--- EVENT_ACTION_LAYER_POPPED and EVENT_ACTION_LAYER_PUSHED
-function CLASS:OnActionLayerChanged( aEventCode, ... )
-    if aEventCode == EVENT_ACTION_LAYER_POPPED then
-        self:Show( false )
-    elseif aEventCode == EVENT_ACTION_LAYER_PUSHED then
-        self:Show( true )
+-- Handler for multiple events indicating change in GUI state
+function CLASS:OnGuiStateChanged( aEventCode, ... )
+    if( GUI_STATE_EVENT[aEventCode] ) then
+        self:Show()
     end
 end
 
@@ -72,6 +77,11 @@ function CLASS:OnGuildSelected()
     self:UpdateCurGuild()
 end
 
+-- Emit the WindowState signal
+function CLASS:OnHide()
+    GC.FireSignal( "WindowState", false )
+end
+
 -- Save the position when the window stops moving
 function CLASS:OnMoveStop()
     local hWnd = self.hWnd
@@ -82,12 +92,19 @@ function CLASS:OnMoveStop()
     self.Db:Set( "wposTop", top )
 end
 
+-- Emit the WindowState signal
+function CLASS:OnShow()
+    GC.FireSignal( "WindowState", true )
+end
+
 -- Initialize the window controls
 function CLASS:SetupControls()
     -- Main window
     local hWnd = WINDOW_MANAGER:CreateTopLevelWindow( GC.ADDON_NAME.."_Window" )
     self.hWnd = hWnd
+    self:SetHandler( hWnd, "OnHide", CLASS.OnHide )
     self:SetHandler( hWnd, "OnMoveStop", CLASS.OnMoveStop )
+    self:SetHandler( hWnd, "OnShow", CLASS.OnShow )
     hWnd:SetHidden( true )
 	hWnd:SetMovable( true )
 
@@ -149,16 +166,21 @@ function CLASS:SetupControls()
 end
 
 function CLASS:SetupWindowEvents()
-    self:RegisterEvent( EVENT_ACTION_LAYER_PUSHED, CLASS.OnActionLayerChanged );
-    self:RegisterEvent( EVENT_ACTION_LAYER_POPPED, CLASS.OnActionLayerChanged );
+    local key,value
+    for key,value in pairs( GUI_STATE_EVENT ) do
+        self:RegisterEvent( key, CLASS.OnGuiStateChanged );
+    end
     self:RegisterCallback( "OnGuildSelected", CLASS.OnGuildSelected );
 end
 
 -- Show/hide the window
-function CLASS:Show( aShow )
+function CLASS:Show()
     local isCursorShown = IsReticleHidden()
     local isGuildSceneShown = SCENE_MANAGER:GetSceneGroup( "guildsSceneGroup" ):IsShowing()
-    local show = aShow and isCursorShown and ( isGuildSceneShown or GC.IsGuildBankAvailable() )
+    local show = isCursorShown and (
+        isGuildSceneShown or
+        GC.IsGuildBankAvailable()
+        )
 
     if( show ) then
         self:UpdateText()

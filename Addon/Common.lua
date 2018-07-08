@@ -35,6 +35,10 @@ function GC.Append( aTable, aValue )
     aTable[ #aTable + 1 ] = aValue
 end
 
+function GC.ConnectSignal( aSignal, aCallback )
+    CALLBACK_MANAGER:RegisterCallback( GC.ADDON_NAME.."_"..aSignal, aCallback )
+end
+
 -- Function to create an enumeration
 function GC.Enum( aContainer, aStartValue, ... )
     local N = aStartValue
@@ -46,8 +50,12 @@ function GC.Enum( aContainer, aStartValue, ... )
     end
 end
 
+function GC.FireSignal( aSignal, ... )
+    CALLBACK_MANAGER:FireCallbacks( GC.ADDON_NAME.."_"..aSignal, ... )
+end
+
 function GC.IsGuildBankAvailable()
-    return SCENE_MANAGER:GetScene( "guildBank" ):IsShowing()
+    return GetInteractionType() == INTERACTION_GUILDBANK
 end
 
 --[[
