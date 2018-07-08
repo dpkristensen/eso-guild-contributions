@@ -1,37 +1,58 @@
-## Welcome to GitHub Pages
+# Guild Contributions Addon
 
-You can use the [editor on GitHub](https://github.com/dpk5081/eso-guild-contributions/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This is an addon for Elder Scrolls Online to manage required contributions to guilds.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+# How it works
 
-### Markdown
+For each guild you're in there are two policies that determine how contributions work.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Rules
 
-```markdown
-Syntax highlighted code block
+A rule defines when a contribution is required (how often, etc...).  Generally, contributions via the window are not permitted unless the contribution is considered "due" by the rule; this is to prevent accidental over-giving via the GuildContributions UI elements.  So for rules that define a due date, it should be set to the day after it is actually required by the guild leaders.
 
-# Header 1
-## Header 2
-### Header 3
+The following rules are defined.
 
-- Bulleted
-- List
+### None
 
-1. Numbered
-2. List
+No contributions are required, and you will not receive reminders about it.  This is the default setting.
 
-**Bold** and _Italic_ and `Code` text
+### Weekday
 
-[Link](url) and ![Image](src)
-```
+Contributions are weekly, due on the specified day of the week.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Options:
 
-### Jekyll Themes
+* Day - Day of the week which you consider this "due":
+	* Contributions are considered due at the beginning of this day.
+	* Contributions are considered late at the beginning of the next day. 
+	* When you change this setting, it will target the NEXT occurrence of this day.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/dpk5081/eso-guild-contributions/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Methods
 
-### Support or Contact
+A method defines HOW to contribute:
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Manual
+
+Contributions are simply annotated, no gold is transferred automatically.  This is the default setting, and should be used for complex contribution requirements.
+
+### Guild Bank
+
+When the guild bank is open, you may deposit gold to the bank via the UI button.
+
+Options:
+
+* Amount - Amount of gold to deposit to the bank
+
+# Developer Feedback
+
+Please use the issue tracking system in github for feature requests.  Bugs should be submitted there too, but likely will end up on the comment section of esoui.
+
+## About the Developer(s)
+
+### okulo
+
+I am the original author of this addon.  I am also a Senior Software Engineer at a large company and I have a family including two kids, so I am VERY busy.  I can't guarantee any appropriate level of responsiveness.  Due to my other commitments, I have no plans to develop any complex features for the addon; but I hope to stay on top of simple bug fixes.  My busy schedule is a major factor in my decision to host publicly on GitHub, so other interested developers can fork or contribute.
+
+# Contributing
+
+Interested in becoming a contributor?  Please create an issue in the GitHub issue tracker with the appropriate information.
