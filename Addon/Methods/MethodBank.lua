@@ -48,12 +48,5 @@ function CLASS:ReportContribution( aRule )
     GC.MethodManualClass.ReportContribution( self, aRule )
 end
 
--- Set default values when the user selects this Method
-function CLASS:SetMethodDefaults()
-    if( DEFAULT_AMOUNT ~= self.MethodSettings.dueDotw ) then
-        self.MethodSettings.dueDotw = DEFAULT_AMOUNT
-    end
-end
-
 GC.MethodNameById[GC.MethodId.BANK] = GC.S( "BANK" )
 GC.MethodClassById[GC.MethodId.BANK] = CLASS
