@@ -17,8 +17,8 @@ function CLASS:Initialize( aDb )
     self.PanelData = {
         type = "panel",
         name = GC.ADDON_NAME,
-        author = "okulo",
-        version = "0.01",
+        author = GC.Build.Author,
+        version = GC.Build.Version,
         website = "https://github.com/dpk5081/eso-guild-contributions",
         registerForRefresh = true,
         registerForDefaults = true

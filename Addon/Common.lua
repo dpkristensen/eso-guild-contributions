@@ -7,7 +7,8 @@
 -- Put everything into a container table to avoid conflicts with other modules
 local GC = {
     ADDON_NAME = "GuildContributions",
-    LAM = LibStub( "LibAddonMenu-2.0" )
+    LAM = LibStub( "LibAddonMenu-2.0" ),
+    Build = GuildContributions_BUILD
 }
 GuildContributionsAddonContainer = GC
 

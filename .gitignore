@@ -39,3 +39,9 @@ luac.out
 *.x86_64
 *.hex
 
+# Python files
+*.pyc
+
+# Generated build output
+*.log
+*build.lua
