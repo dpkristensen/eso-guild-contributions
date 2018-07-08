@@ -19,7 +19,7 @@ function CLASS:Initialize( aGuildName, aGuildSettings )
         "methodBank",
         { -- GUI Options
             { -- Amount to deposit
-                name = GC.S( "AMOUNT" ),
+                name = GC.S( "BANK_GOLD" ),
                 var = "amount",
                 type = "number",
                 default = DEFAULT_AMOUNT
@@ -55,5 +55,5 @@ function CLASS:SetMethodDefaults()
     end
 end
 
-GC.MethodNameById[GC.MethodId.BANK] = GC.S( "GUILD_BANK" )
+GC.MethodNameById[GC.MethodId.BANK] = GC.S( "BANK" )
 GC.MethodClassById[GC.MethodId.BANK] = CLASS

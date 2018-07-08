@@ -26,7 +26,14 @@ end
 
 local s = GC.LocalizeString
 
-s( "AMOUNT", "Amount" )
+-- Create copies of SI_ strings for simple terms:
+
+s( "BANK", GC.GetSIText( "SI_GAMEPAD_GUILD_BANK_CATEGORY_HEADER" ) )
+s( "BANK_GOLD", GC.GetSIText( "SI_GAMEPAD_BANK_DEPOSIT_GOLD_ENTRY_NAME" ) )
+s( "GUILD", GC.GetSIText( "SI_GAMEPAD_GUILD_KIOSK_GUILD_HEADER" ) )
+
+-- Explicitly defined strings
+
 s( "BTN_CONTRIBUTE", "Contribute Now" )
 s( "CLEAR", "Clear" )
 s( "CONTRIBUTION_APPLIED", "Contribution recorded successfully!" )
@@ -39,8 +46,6 @@ s( "DAY", "Day" )
 s( "DEFAULT_GUILD", "Using default settings for guild" )
 s( "FRIDAY", "Friday" )
 s( "GUI_TITLE", "Guild Contributions" )
-s( "GUILD", "Guild" )
-s( "GUILD_BANK", "Guild Bank" )
 s( "HELP_OPEN_GUILD_BANK", "Open the Guild Bank to deposit" )
 s( "LOADED", "Loaded" )
 s( "MANUAL", "Manual" )

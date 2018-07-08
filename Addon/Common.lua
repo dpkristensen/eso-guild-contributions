@@ -49,3 +49,29 @@ end
 function GC.IsGuildBankAvailable()
     return SCENE_MANAGER:GetScene( "guildBank" ):IsShowing()
 end
+
+--[[
+    Function to get a text string
+
+    If the string doesn't exist, one is built from the ID name passed to it to facilitate basic
+    functionality.
+
+    NOTE: This should NOT be used for any saved variables)
+]]
+function GC.GetSIText( aName )
+    local ret = _G[aName]
+    if( ret == nil ) then
+        ret = aName
+        -- Filter out common sub-identifiers
+        ret = ret:gsub( "_CATEGORY", "" )
+        ret = ret:gsub( "_GAMEPAD", "" )
+        ret = ret:gsub( "_HEADER$", "" )
+        ret = ret:gsub( "_LABEL", "" )
+        ret = ret:gsub( "_FOOTER", "" )
+        ret = ret:gsub( "^SI_", "" ) -- must be last in this list
+    else
+        ret = GetString( ret )
+    end
+    ret = ret:gsub( ":$", "" )
+    return ret
+end
