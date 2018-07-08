@@ -12,7 +12,6 @@ import zipfile
 
 TOP_DIR = os.getcwd()
 ADDON_NAME = os.path.basename(TOP_DIR)
-OUT_FILE = os.path.join(TOP_DIR, ADDON_NAME + ".zip")
 ADDON_DIR = os.path.join(TOP_DIR, "Addon")
 ADDON_INF_FILE = os.path.join(ADDON_DIR, ADDON_NAME + ".txt")
 
@@ -21,7 +20,6 @@ ADDON_INF_FILE = os.path.join(ADDON_DIR, ADDON_NAME + ".txt")
 BUILD_HEADER_FILE = os.path.join(ADDON_DIR, "build.lua")
 
 GENERATED_FILES = [
-    OUT_FILE,
     BUILD_HEADER_FILE
     ]
 
@@ -39,11 +37,13 @@ def add_dir_files(root_dir, zip_fh):
     """
     cur_dir = os.getcwd()
     os.chdir(root_dir)
+    log("")
+    log("Adding files from " + root_dir + ":")
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             filename = os.path.join(root, file)
             filename = os.path.relpath(filename, root_dir)
-            log( "Adding " + filename)
+            log( "    " + filename)
             zip_fh.write(filename)
     os.chdir(cur_dir)
 
@@ -90,11 +90,17 @@ def main():
     """
         Run the build steps
     """
+    global GENERATED_FILES
+
     log("Building addon: " + ADDON_NAME)
     info = get_addon_info(ADDON_INF_FILE)
 
+    OUT_FILE = os.path.join(TOP_DIR, ADDON_NAME + "-" + info["Version"] + ".zip")
+    GENERATED_FILES += [OUT_FILE]
+
     for filename in GENERATED_FILES:
         if os.access(filename, os.F_OK):
+            log( "Removing " + filename )
             os.remove(filename)
 
     write_dict_lua_file(info, BUILD_HEADER_FILE, ADDON_NAME + "_BUILD")
