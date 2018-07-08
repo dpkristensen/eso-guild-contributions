@@ -50,16 +50,16 @@ end
 -- Build a list of options to be shown as text to the user
 function CLASS:GetOptionText()
     local text = ""
+    local sep = ""
 
     local firstIteration = true
     local key,option
     for key,option in pairs( self.optionGroup ) do
+        text = text..sep..self:BuildArgText( option )
         if( firstIteration ) then
             firstIteration = false
-        else
-            text = "\n"..text
+            sep = "\n"
         end
-        text = text..self:BuildArgText( option )
     end
 
     return text
