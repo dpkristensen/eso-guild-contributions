@@ -17,6 +17,8 @@ local nSPC = SPC * -1
 local GUI_STATE_EVENT = {
     [EVENT_ACTION_LAYER_POPPED] = true,
     [EVENT_ACTION_LAYER_PUSHED] = true,
+    [EVENT_MAIL_CLOSE_MAILBOX] = true,
+    [EVENT_MAIL_OPEN_MAILBOX] = true,
     [EVENT_CLOSE_GUILD_BANK] = true,
     [EVENT_OPEN_GUILD_BANK] = true,
 }
@@ -179,7 +181,8 @@ function CLASS:Show()
     local isGuildSceneShown = SCENE_MANAGER:GetSceneGroup( "guildsSceneGroup" ):IsShowing()
     local show = isCursorShown and (
         isGuildSceneShown or
-        GC.IsGuildBankAvailable()
+        GC.IsGuildBankAvailable() or
+        GC.IsMailAvailable()
         )
 
     if( show ) then

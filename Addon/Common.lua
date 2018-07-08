@@ -58,6 +58,10 @@ function GC.IsGuildBankAvailable()
     return GetInteractionType() == INTERACTION_GUILDBANK
 end
 
+function GC.IsMailAvailable()
+    return GetInteractionType() == INTERACTION_MAIL
+end
+
 --[[
     Function to get a text string
 

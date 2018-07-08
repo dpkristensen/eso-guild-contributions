@@ -61,6 +61,7 @@ Rules/RuleWeekday.lua
 Methods/Common.lua
 Methods/MethodManual.lua
 Methods/MethodBank.lua
+Methods/MethodMail.lua
 
 ; Must be last
 EventHooks.lua

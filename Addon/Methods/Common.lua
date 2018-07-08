@@ -12,7 +12,8 @@ GC.Enum(
     GC.MethodId,
     1, -- 1-based for indexing
     "MANUAL",
-    "BANK"
+    "BANK",
+    "MAIL"
 )
 
 GC.MethodNameById = {}
