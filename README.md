@@ -41,7 +41,20 @@ When the guild bank is open, you may deposit gold to the bank via the UI button.
 
 Options:
 
-* Amount - Amount of gold to deposit to the bank
+* Depost Gold - Amount of gold to deposit to the bank
+
+### Mail
+
+When the mailbox is open, you may send gold via the UI button.
+
+Options:
+
+* Gold - Amount of gold to send (1-10000)
+* To - Recipient of gold
+* Subject - Subject line for the mail
+* Body - Body text (200 char max)
+
+***THIS WILL INCUR POSTAGE COSTS!***
 
 # Developer Feedback
 
