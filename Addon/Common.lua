@@ -76,6 +76,14 @@ function GC.GetSIText( aName )
     return ret
 end
 
+-- Iterator that splits the string
+function GC.Split( aString, aDelim )
+    if( aString:sub( -1 ) ~= aDelim ) then
+        aString = aString..aDelim
+    end
+    return aString:gmatch( "(.-)"..aDelim )
+end
+
 -- Trim from http://lua-users.org/wiki/CommonFunctions
 function GC.Trim( aString )
     return aString:gsub( "^%s*(.-)%s*$", "%1" )

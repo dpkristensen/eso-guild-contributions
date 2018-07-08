@@ -154,27 +154,19 @@ end
 function CLASS:SetOptionText( aNewValue )
     local changed = false
 
-    -- Iterator that splits the string
-    local function Split( aString, aDelim )
-        if( aString:sub( -1 ) ~= aDelim ) then
-            aString = aString..aDelim
-        end
-        return aString:gmatch( "(.-)"..aDelim )
-    end
-
     -- For each line...
     local line, identifier
-    for line in Split( aNewValue, "\n" ) do
+    for line in GC.Split( aNewValue, "\n" ) do
         -- Build a list of separated identifiers
-        local argList = {}
-        for identifier in Split( line, "=" ) do
-            argList[#argList + 1] = identifier
-        end
-        -- If it is an exact pair, parse the argument pair
-        if( #argList == 2 ) then
-            if( self:ParseArg( argList[1], argList[2] ) ) then
+        local arg,value = line:match( "([^=]+)=(.*)" )
+
+        -- If the format is correct, parse the argument pair
+        if( ( arg ~= nil ) and ( value ~= nil ) ) then
+            if( self:ParseArg( arg, value ) ) then
                 changed = true
             end
+        else
+            GC.Print( GC.S( "OPTION_BAD_INPUT" )..": "..tostring( line ) )
         end
     end
 
