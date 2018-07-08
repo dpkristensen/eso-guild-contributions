@@ -77,15 +77,18 @@ end
     SetMethodOptionText() instead.
 ]]
 function CLASS:SetOptionText( aNewValue )
+    local changed = false
     if( self:HasOptions() ) then
-        self.settingsParser:SetOptionText( aNewValue )
+        changed = self.settingsParser:SetOptionText( aNewValue )
     end
 
-    self:SetMethodOptionText()
-    self:Update()
+    self:SetMethodOptionText( changed )
+    if( changed ) then
+        self:Update()
+    end
 end
 
-function CLASS:SetMethodOptionText()
+function CLASS:SetMethodOptionText( aChanged )
     -- Do nothing by default
 end
 

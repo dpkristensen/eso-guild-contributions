@@ -57,8 +57,10 @@ function CLASS:ReportContribution()
 end
 
 -- Set custom options
-function CLASS:SetRuleOptionText()
-    self.RuleSettings.dueTimeStamp = nil -- Clear out due date; it is recalculated on next update
+function CLASS:SetRuleOptionText( aChanged )
+    if( aChanged ) then
+        self.RuleSettings.dueTimeStamp = nil -- Clear out due date; it is recalculated on next update
+    end
 end
 
 -- Set default values when the user selects this rule

@@ -59,7 +59,11 @@ function CLASS:GetOptionText()
     return text
 end
 
--- Parse a setting for aOption of type "number" with input aValue
+--[[
+    Parse a setting for aOption of type "number" with input aValue
+
+    Return whether options were actually changed.
+]]
 function CLASS:ParseNumberArg( aOption, aValue )
     local numValue = tonumber( aValue )
 
@@ -79,28 +83,37 @@ function CLASS:ParseNumberArg( aOption, aValue )
         end
     end
 
+    local changed = false
     if( numValue == nil ) then
         GC.Debug( "Bad input: '"..aValue.."'" )
-    else
+    elseif( self.settings[aOption.var] ~= numValue ) then
         self.settings[aOption.var] = numValue
+        changed = true
     end
+    return changed
 end
 
--- Parse a setting for an argument pair
+--[[
+    Parse a setting for an argument pair
+
+    Return whether options were actually changed.
+]]
 function CLASS:ParseArg( aName, aValue )
     local key,option
     for key,option in pairs( self.optionGroup ) do
         if( option.name == aName ) then
+            local changed = false
             if( option.type == "number" ) then
-                self:ParseNumberArg( option, aValue )
+                changed = self:ParseNumberArg( option, aValue )
             else
                 GC.Debug( "Unhandled type='"..option.type.."' for '"..aName.."'" )
             end
-            return
+            return changed
         end
     end
 
     GC.Debug( "'"..aName.."' not found in options list" )
+    return false
 end
 
 -- Set default option values
@@ -113,6 +126,7 @@ end
 
 -- Parse the list of options modified by the user
 function CLASS:SetOptionText( aNewValue )
+    local changed = false
 
     -- Iterator that splits the string
     local function Split( aString, aDelim )
@@ -132,7 +146,11 @@ function CLASS:SetOptionText( aNewValue )
         end
         -- If it is an exact pair, parse the argument pair
         if( #argList == 2 ) then
-            self:ParseArg( argList[1], argList[2] )
+            if( self:ParseArg( argList[1], argList[2] ) ) then
+                changed = true
+            end
         end
     end
+
+    return changed
 end

@@ -135,15 +135,18 @@ end
     SetRuleOptionText() instead.
 ]]
 function CLASS:SetOptionText( aNewValue )
+    local changed = false
     if( self:HasOptions() ) then
-        self.settingsParser:SetOptionText( aNewValue )
+        changed = self.settingsParser:SetOptionText( aNewValue )
     end
 
-    self:SetRuleOptionText()
-    self:Update()
+    self:SetRuleOptionText( changed )
+    if( changed ) then
+        self:Update()
+    end
 end
 
-function CLASS:SetRuleOptionText()
+function CLASS:SetRuleOptionText( aChanged )
     -- Do nothing by default
 end
 
