@@ -1,0 +1,63 @@
+﻿; This Add-on is not created by, affiliated with or sponsored by ZeniMax
+; Media Inc. or its affiliates. The Elder Scrolls® and related logos are
+; registered trademarks or trademarks of ZeniMax Media Inc. in the United
+; States and/or other countries. All rights reserved.
+; You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
+
+## Title: |c00ff00GuildContributions|r
+## Description: GuildContributions helps you support your guild financially.
+## Version: 0.01
+## Author: okulo
+## APIVersion: 100023
+## SavedVariables: GuildContributions_DB GuildContributions_DebugOpts
+## OptionalDependsOn: LibAddonMenu-2.0
+
+; Libraries
+Libs/LibStub/LibStub.lua
+Libs/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
+Libs/LibAddonMenu-2.0/controls/panel.lua
+Libs/LibAddonMenu-2.0/controls/submenu.lua
+Libs/LibAddonMenu-2.0/controls/button.lua
+Libs/LibAddonMenu-2.0/controls/checkbox.lua
+Libs/LibAddonMenu-2.0/controls/colorpicker.lua
+Libs/LibAddonMenu-2.0/controls/custom.lua
+Libs/LibAddonMenu-2.0/controls/description.lua
+Libs/LibAddonMenu-2.0/controls/dropdown.lua
+Libs/LibAddonMenu-2.0/controls/editbox.lua
+Libs/LibAddonMenu-2.0/controls/header.lua
+Libs/LibAddonMenu-2.0/controls/slider.lua
+Libs/LibAddonMenu-2.0/controls/texture.lua
+Libs/LibAddonMenu-2.0/controls/iconpicker.lua
+Libs/LibAddonMenu-2.0/controls/divider.lua
+
+; Must be first
+Common.lua
+
+; Main classes
+App.lua
+Database.lua
+SettingsGUI.lua
+Window.lua
+
+; String tables
+String/Functions.lua
+String/Table.lua
+String/$(language).lua
+
+; Utility
+Util/DateTime.lua
+Util/Debug.lua
+Util/SettingsParser.lua
+
+; Rules
+Rules/Common.lua
+Rules/RuleNone.lua
+Rules/RuleWeekday.lua
+
+; Methods
+Methods/Common.lua
+Methods/MethodManual.lua
+Methods/MethodBank.lua
+
+; Must be last
+EventHooks.lua

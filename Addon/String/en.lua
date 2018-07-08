@@ -1,0 +1,1 @@
+-- Stub; EN strings are in Table.lua
