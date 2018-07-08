@@ -79,6 +79,10 @@ function CLASS:AddEnumPolicy( aOptionTbl, aEnum, aGuildIdx )
                 return
             end
             lookupByGuildName[info.name]:SetOptionText( aNewValue )
+
+            -- Trigger a refresh to make the text nice again (e.g., use lookup table value instead
+            -- of number, etc...).
+            CALLBACK_MANAGER:FireCallbacks( "LAM-RefreshPanel",  self.Panel )
         end,
         isMultiline = true,
         disabled = function()

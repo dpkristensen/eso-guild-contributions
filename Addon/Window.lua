@@ -59,7 +59,6 @@ function CLASS:OnBtnContributeClicked()
 
     -- The settings GUI will not know that settings changed, so trigger refresh manually
     CALLBACK_MANAGER:FireCallbacks( "LAM-RefreshPanel", GC.APP.SettingsGUI.Panel )
-
 end
 
 -- Handle lock button clicks
