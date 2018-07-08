@@ -20,12 +20,18 @@ end
 -- Get text for aOption of type "number"
 function CLASS:BuildNumberArgText( aOption )
     local rawValue = self.settings[aOption.var]
+    local ret = tostring( rawValue )
+
     if( aOption.lookupTable ~= nil ) then
         -- If there is a lookup table, translate it for the user
-        return aOption.lookupTable[rawValue]
+        ret = aOption.lookupTable[rawValue]
+        if( ret == nil ) then
+            GC.Debug( "Cannot find "..tostring( rawValue ).." for "..aOption.var )
+            ret = tostring( rawValue )
+        end
     end
 
-    return tostring( rawValue )
+    return ret
 end
 
 -- Convert aOption into a line of text for display to the user
@@ -66,27 +72,47 @@ end
 ]]
 function CLASS:ParseNumberArg( aOption, aValue )
     local numValue = tonumber( aValue )
+    local foundInLookupTable = false
 
     if( numValue == nil ) then
         -- Not a number, try lookup table?
-        local lowInValue = string.lower( aValue )
+        local lowInValue = GC.Trim( string.lower( aValue ) )
         if( aOption.lookupTable ~= nil ) then
             local key,value
             for key,value in pairs( aOption.lookupTable ) do
                 local lowTblValue = string.lower( value )
-                if( ( nil ~= string.find( lowInValue, lowTblValue, 1, true ) ) or
-                    ( nil ~= string.find( lowTblValue, lowInValue, 1, true ) ) ) then
+                if( lowInValue == lowTblValue ) then
                     numValue = key
+                    foundInLookupTable = true
                     break
                 end
             end
         end
     end
 
-    local changed = false
     if( numValue == nil ) then
-        GC.Debug( "Bad input: '"..aValue.."'" )
-    elseif( self.settings[aOption.var] ~= numValue ) then
+        self:ShowBadInput( aOption, aValue )
+        return false
+    end
+
+    -- If we didn't already, check to make sure it is in the lookup table
+    if( ( aOption.lookupTable ~= nil ) and
+        ( not foundInLookupTable ) ) then
+        local key,value
+        for key,value in pairs( aOption.lookupTable ) do
+            if( key == numValue ) then
+                foundInLookupTable = true
+                break
+            end
+        end
+        if( not foundInLookupTable ) then
+            self:ShowBadInput( aOption, numValue )
+            return false
+        end
+    end
+
+    local changed = false
+    if( self.settings[aOption.var] ~= numValue ) then
         self.settings[aOption.var] = numValue
         changed = true
     end
@@ -153,4 +179,35 @@ function CLASS:SetOptionText( aNewValue )
     end
 
     return changed
+end
+
+-- Show bad input error message
+function CLASS:ShowBadInput( aOption, aValue )
+    local text = GC.S( "OPTION_BAD_INPUT" )
+    if( aOption.type == "number" ) then
+        text = text.."'"..tostring( aValue ).."' "..GC.S( "OPTION_BAD_INPUT_MUST_BE" )..": "
+        if( nil ~= aOption.lookupTable ) then
+            local key,value
+            for key,value in pairs( aOption.lookupTable ) do
+                text = text.."\n  "..tostring( key ).." || "..value
+            end
+        elseif( ( nil ~= aOption.min ) or ( nil ~= aOption.max ) ) then
+            if( nil ~= aOption.min ) then
+                text = text..tostring( aOption.min ).." <= "
+            end
+            text = text..aOption.name
+            if( nil ~= aOption.max ) then
+                text = text.." <= "..tostring( aOption.max )
+            end
+        else
+            GC.Debug( "Bad configuration for "..aOption.name )
+            text = text.."???"
+        end
+    elseif( aValue == nil ) then
+        text = text..aOption.name.."=nil"
+    else
+        GC.Debug( "Unknown option type "..aOption.type )
+        text = text..aOption.name.."='"..tostring( aValue ).."'"
+    end
+    GC.Print( text )
 end

@@ -75,3 +75,8 @@ function GC.GetSIText( aName )
     ret = ret:gsub( ":$", "" )
     return ret
 end
+
+-- Trim from http://lua-users.org/wiki/CommonFunctions
+function GC.Trim( aString )
+    return aString:gsub( "^%s*(.-)%s*$", "%1" )
+end
