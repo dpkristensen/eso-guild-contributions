@@ -45,3 +45,4 @@ luac.out
 # Generated build output
 *.log
 *build.lua
+GuildContributions*
