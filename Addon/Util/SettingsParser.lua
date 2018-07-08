@@ -41,9 +41,12 @@ function CLASS:BuildArgText( aOption )
     if( aOption.type == "number" ) then
         text = self:BuildNumberArgText( aOption )
     else
-        GC.Debug( "Unhandled type='"..aOption.type.."' for '"..aOption.name.."'" )
+        if( aOption.type ~= "string" ) then
+            GC.Debug( "Unhandled type='"..aOption.type.."' for '"..aOption.name.."'" )
+        end
         text = tostring( self.settings[aOption.var] )
     end
+
     return aOption.name.."="..text
 end
 
@@ -134,6 +137,36 @@ function CLASS:ParseNumberArg( aOption, aValue )
 end
 
 --[[
+    Parse a setting for aOption of type "string" with input aValue
+
+    Return whether options were actually changed.
+]]
+function CLASS:ParseStringArg( aOption, aValue )
+    local changed = false
+    local strlen = aValue:len()
+
+    -- Check against min limit
+    if( ( aOption.min ~= nil ) and
+        ( strlen < aOption.min ) ) then
+        self:ShowBadInput( aOption, aValue )
+        return false
+    end
+
+    -- Check against max limit
+    if( ( aOption.max ~= nil ) and
+        ( strlen > aOption.max ) ) then
+        self:ShowBadInput( aOption, aValue )
+        return false
+    end
+
+    if( self.settings[aOption.var] ~= aValue ) then
+        self.settings[aOption.var] = aValue
+        changed = true
+    end
+    return changed
+end
+
+--[[
     Parse a setting for an argument pair
 
     Return whether options were actually changed.
@@ -145,6 +178,8 @@ function CLASS:ParseArg( aName, aValue )
             local changed = false
             if( option.type == "number" ) then
                 changed = self:ParseNumberArg( option, aValue )
+            elseif( option.type == "string" ) then
+                changed = self:ParseStringArg( option, aValue )
             else
                 GC.Debug( "Unhandled type='"..option.type.."' for '"..aName.."'" )
             end
@@ -208,6 +243,19 @@ function CLASS:ShowBadInput( aOption, aValue )
         else
             GC.Debug( "Bad configuration for "..aOption.name )
             text = text.."???"
+        end
+    elseif( aOption.type == "string" ) then
+        if( ( nil ~= aOption.min ) or ( nil ~= aOption.max ) ) then
+            text = text.."'"..tostring( aValue ).."' "..GC.S( "OPTION_BAD_INPUT_MUST_BE" )..": "
+            if( nil ~= aOption.min ) then
+                text = text..tostring( aOption.min ).." <= "
+            end
+            text = text.."len()"
+            if( nil ~= aOption.max ) then
+                text = text.." <= "..tostring( aOption.max )
+            end
+        else
+            text = text..aOption.name.."='"..tostring( aValue ).."'"
         end
     elseif( aValue == nil ) then
         text = text..aOption.name.."=nil"
