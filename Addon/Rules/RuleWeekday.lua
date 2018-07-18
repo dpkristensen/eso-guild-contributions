@@ -39,7 +39,7 @@ end
 
 -- Return the text to show in the floating window
 function CLASS:GetWindowText()
-    return self:GetStatusText( GC.NowDT(), self:GetLateTimeDT(), false )
+    return self:GetStatusText( GC.NowDT(), self:GetDueTimeDT(), self:GetLateTimeDT(), false )
 end
 
 -- Return whether a contribution is needed based on the rule

@@ -76,7 +76,7 @@ function CLASS:GetOptionText()
 end
 
 -- Return text representing the current status
-function CLASS:GetStatusText( aNow, aDueTime, aIncludeGuild )
+function CLASS:GetStatusText( aNow, aDueTime, aLateTime, aIncludeGuild )
     local text
 
     local guildText = ""
@@ -125,7 +125,7 @@ function CLASS:ReportStatus( aDueTime, aLateTime )
         GC.Debug( "  rel="..now:Since( lastContribDT ):GetRelativeText() )
     end
 
-    GC.Print( self:GetStatusText( now, aDueTime, true ) )
+    GC.Print( self:GetStatusText( now, aDueTime, aLateTime, true ) )
 end
 
 --[[
