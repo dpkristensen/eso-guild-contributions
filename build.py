@@ -7,44 +7,64 @@
 
 import os
 import re
+import shutil
 import unicodedata
 import zipfile
 
 TOP_DIR = os.getcwd()
 ADDON_NAME = os.path.basename(TOP_DIR)
-ADDON_DIR = os.path.join(TOP_DIR, "Addon")
+ADDON_DIR = os.path.join(TOP_DIR, "GuildContributions")
 ADDON_INF_FILE = os.path.join(ADDON_DIR, ADDON_NAME + ".txt")
 
 # Generate the build header in the addon directory so the addon folder can be used directly as
 # the addon folder via symbolic link.
 BUILD_HEADER_FILE = os.path.join(ADDON_DIR, "build.lua")
 
-GENERATED_FILES = [
-    BUILD_HEADER_FILE
-    ]
-
 SUPPLEMENTARY_FILES = [
     "LICENSE"
     ]
 
+GENERATED_FILES = [
+    BUILD_HEADER_FILE
+    ] \
+    + [ os.path.join( ADDON_DIR, fname ) for fname in SUPPLEMENTARY_FILES ]
 
-def add_dir_files(root_dir, zip_fh):
+
+def add_dir_files(root_dir, dir_path, zip_fh):
     """
         Add files in a directory to a zip file
 
-        @param root_dir The root directory to find all the files in
+        @param root_dir The root directory for relative paths in the zip file
+        @param dir_path The directory to find all the files in
+        @param zip_fh Open zipfile handle
+    """
+    cur_dir = os.getcwd()
+    os.chdir(root_dir)
+    log("")
+    log("Adding files from " + dir_path + ":")
+    for root, dirs, files in os.walk(dir_path):
+        for file in files:
+            filename = os.path.join(root, file)
+            filename = os.path.relpath(filename, root_dir)
+            log( "    " + filename)
+            zip_fh.write(filename)
+    os.chdir(cur_dir)
+
+def add_file(root_dir, filename, zip_fh):
+    """
+        Add a file to a zip file
+
+        @param root_dir The root directory for relative paths in the zip file
+        @param filename The file to add
         @param zip_fh Open zipfile handle
     """
     cur_dir = os.getcwd()
     os.chdir(root_dir)
     log("")
     log("Adding files from " + root_dir + ":")
-    for root, dirs, files in os.walk(root_dir):
-        for file in files:
-            filename = os.path.join(root, file)
-            filename = os.path.relpath(filename, root_dir)
-            log( "    " + filename)
-            zip_fh.write(filename)
+    filename = os.path.relpath(filename, root_dir)
+    log( "    " + filename)
+    zip_fh.write(filename)
     os.chdir(cur_dir)
 
 def log( msg ):
@@ -106,9 +126,12 @@ def main():
     write_dict_lua_file(info, BUILD_HEADER_FILE, ADDON_NAME + "_BUILD")
 
     with zipfile.ZipFile(file=OUT_FILE, mode="w", compression=zipfile.ZIP_DEFLATED) as zip_fh:
-        add_dir_files(ADDON_DIR, zip_fh)
+        add_dir_files(TOP_DIR, ADDON_DIR, zip_fh)
         for filename in SUPPLEMENTARY_FILES:
-            zip_fh.write(filename)
+            copied_filename = os.path.join(ADDON_DIR, filename)
+            log( "Copying {} -> {}".format(filename, copied_filename) )
+            shutil.copyfile(filename, copied_filename)
+            add_file(TOP_DIR, copied_filename, zip_fh)
 
 
 def write_dict_lua_file(obj, filename, table_name):
