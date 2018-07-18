@@ -37,7 +37,7 @@ function CLASS:ReportContribution( aRule )
         return
     end
 
-    if( GC.IsGuildBankAvailable() ) then
+    if( not GC.IsGuildBankAvailable() ) then
         GC.MsgP( "CONTRIBUTION_FAILED", GC.S( "HELP_OPEN_GUILD_BANK" ) )
         return
     end
