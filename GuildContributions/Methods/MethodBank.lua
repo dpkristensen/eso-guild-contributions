@@ -12,6 +12,12 @@ GC.MethodBankClass = CLASS
 
 local DEFAULT_AMOUNT = 1
 
+-- Return a string describing the history
+function CLASS:GetHistoryString()
+    return GC.MethodManualClass.GetHistoryString( self )..
+       " "..self.MethodSettings.amount.."g"
+end
+
 function CLASS:Initialize( aGuildName, aGuildSettings )
     GC.MethodManualClass.Initialize( self, aGuildName, aGuildSettings )
     self:InitBase(

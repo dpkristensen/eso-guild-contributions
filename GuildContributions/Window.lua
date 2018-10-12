@@ -141,10 +141,19 @@ function CLASS:SetupControls()
     hRule:SetText( "RULE" )
     hRule:SetWidth( hTitle:GetWidth() * 1.5 )
 
+    -- History
+    local hHistory = WINDOW_MANAGER:CreateControl( GC.ADDON_NAME.."_History", hWnd, CT_LABEL )
+    self.hHistory = hHistory
+    hHistory:SetAnchor( TOP, hRule, BOTTOM, 0, SPC )
+    hHistory:SetColor( 0.77, 0.76, 0.62 )
+    hHistory:SetFont( "ZoFontGameMedium" )
+    hHistory:SetText( "DETAIL" )
+    hHistory:SetWidth( hRule:GetWidth() )
+
     -- Info
     local hInfo = WINDOW_MANAGER:CreateControl( GC.ADDON_NAME.."_Info", hWnd, CT_LABEL )
     self.hInfo = hInfo
-    hInfo:SetAnchor( TOP, hRule, BOTTOM, 0, SPC )
+    hInfo:SetAnchor( TOP, hHistory, BOTTOM, 0, SPC )
     hInfo:SetColor( 0.77, 0.76, 0.62 )
     hInfo:SetFont( "ZoFontGameMedium" )
     hInfo:SetText( "INFO" )
@@ -229,15 +238,21 @@ end
 function CLASS:UpdateText()
     local rule = GC.RuleByGuildName[self.curGuild]
     local ruleText = ""
+    local historyText = GC.S( "NONE" )
     local infoText = ""
     local btnEnabled = false
 
     if( rule ~= nil ) then
         ruleText = GC.S( "OPTION_CONTRIBUTION_RULE" )..": "..GC.RuleNameById[rule.RuleId]
+        guild = self.Db:GetGuild( self.curGuild )
+        if( guild.history ~= nil ) then
+            historyText = guild.history
+        end
         infoText = rule:GetWindowText()
         btnEnabled = rule:IsContributionNeeded()
     end
     self.hRule:SetText( ruleText )
+    self.hHistory:SetText( GC.S( "HISTORY" )..": "..historyText )
     self.hInfo:SetText( infoText )
 
     self.hWnd:SetDimensions(
@@ -246,6 +261,7 @@ function CLASS:UpdateText()
         ( SPC * 5 )
             + self.hTitle:GetHeight()
             + self.hRule:GetHeight()
+            + self.hHistory:GetHeight()
             + self.hInfo:GetHeight()
             + self.hBtnContribute:GetHeight()
         )

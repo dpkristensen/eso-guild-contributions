@@ -47,6 +47,11 @@ function CLASS:HasOptions()
     return self.GuiOptions ~= nil
 end
 
+-- Return a string describing the history
+function CLASS:GetHistoryString()
+    return GC.NowDT():GetBeginningOfDay():GetAbsoluteText()
+end
+
 -- Return the localized name of the Method
 function CLASS:GetName()
     return GC.MethodNameById[self.MethodId]
@@ -66,7 +71,10 @@ end
 -- Mark the contribution as applied and call the rule to update
 function CLASS:ReportContribution( aRule )
     self.GuildSettings.lastContributionTime = GC.NowTS()
-    GC.Print( self.GuildName..": "..GC.S( "CONTRIBUTION_APPLIED" ).." ("..aRule:GetName()..")" )
+    history = self:GetHistoryString()
+    self.GuildSettings.history = history
+    GC.Print( self.GuildName..": "..GC.S( "CONTRIBUTION_APPLIED" )..
+        " ("..aRule:GetName()..") - ".. history )
     aRule:ReportContribution()
 end
 
