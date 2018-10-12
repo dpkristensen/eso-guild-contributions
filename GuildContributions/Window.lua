@@ -23,8 +23,9 @@ local GUI_STATE_EVENT = {
     [EVENT_OPEN_GUILD_BANK] = true,
 }
 
-function CLASS:Initialize( aDb )
+function CLASS:Initialize( aDb, aSettingsGUI )
     self.Db = aDb
+    self.SettingsGUI = aSettingsGUI
 
     self:SetupControls()
     self:SetupWindowEvents()
@@ -40,6 +41,12 @@ local UNPINNED_TEX = {
     down = "esoui/art/buttons/unpinned_mousedown.dds",
     hover = "esoui/art/buttons/unpinned_mouseover.dds",
     normal = "esoui/art/buttons/unpinned_normal.dds"
+}
+
+local SETTINGS_TEX = {
+    down="esoui/art/menubar/menubar_mainmenu_down.dds",
+    hover="esoui/art/menubar/menubar_mainmenu_over.dds",
+    normal="esoui/art/menubar/menubar_mainmenu_up.dds"
 }
 
 local function SetBtnTextures( aBtn, aTex )
@@ -72,6 +79,11 @@ end
 function CLASS:OnBtnLockClicked()
     self.Db:Set( "wposLock", not self.Db:Get( "wposLock" ) )
     self:UpdateMovable()
+end
+
+-- Handle settings button clicks
+function CLASS:OnBtnSettingsClicked()
+    GC.LAM:OpenToPanel(self.SettingsGUI.Panel)
 end
 
 -- Handle the guild being selected
@@ -121,9 +133,17 @@ function CLASS:SetupControls()
     -- Lock Button
     local hBtnLock = WINDOW_MANAGER:CreateControlFromVirtual( GC.ADDON_NAME.."_ButtonLock", hWnd, "ZO_CheckButton" )
     self.hBtnLock = hBtnLock
-    hBtnLock:SetAnchor( TOPLEFT, hWnd, TOPLEFT, SPC, SPC)
+    hBtnLock:SetAnchor( TOPLEFT, hWnd, TOPLEFT, SPC, SPC )
     hBtnLock:SetDimensions( 40, 40 )
     self:SetHandler( hBtnLock, "OnClicked", CLASS.OnBtnLockClicked )
+
+    -- Settings Button
+    local hBtnSettings = WINDOW_MANAGER:CreateControlFromVirtual( GC.ADDON_NAME.."_ButtonSettings", hWnd, "ZO_CheckButton" )
+    self.hBtnSettings = hBtnSettings
+    hBtnSettings:SetAnchor( TOPRIGHT, hWnd, TOPRIGHT, SPC * -1, SPC )
+    hBtnSettings:SetDimensions( 30, 30 )
+    SetBtnTextures( hBtnSettings, SETTINGS_TEX )
+    self:SetHandler( hBtnSettings, "OnClicked", CLASS.OnBtnSettingsClicked )
 
     -- Title
     local hTitle = WINDOW_MANAGER:CreateControl( GC.ADDON_NAME.."_Title", hWnd, CT_LABEL )

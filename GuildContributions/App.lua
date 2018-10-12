@@ -23,7 +23,7 @@ function CLASS:Initialize()
 
     self.SettingsGUI = GC.SettingsGUIClass( self.Db )
 
-    self.Window = GC.WindowClass( self.Db )
+    self.Window = GC.WindowClass( self.Db, self.SettingsGUI )
 
     self:Update();
 end
