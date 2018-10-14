@@ -11,6 +11,7 @@ local CLASS = GC.MethodManualClass()
 GC.MethodMailClass = CLASS
 
 local DEFAULT_AMOUNT = 1
+local DEFAULT_MULT = 1
 
 -- Return a string describing the history
 function CLASS:GetHistoryString()
@@ -31,6 +32,12 @@ function CLASS:Initialize( aGuildName, aGuildSettings )
                 default = DEFAULT_AMOUNT,
                 min = 1,
                 max = 10000
+            },
+            { -- Multiplier
+                name = GC.S( "MULTIPLIER" ),
+                var = "mult",
+                type = "number",
+                default = DEFAULT_MULT
             },
             { -- Recipient
                 name = GC.S( "MAIL_TO" ),
@@ -109,7 +116,7 @@ function CLASS:ReportContribution( aRule )
         )
 
     self.sendInProgress = true
-    QueueMoneyAttachment( self.MethodSettings.amount )
+    QueueMoneyAttachment( self.MethodSettings.amount * self.MethodSettings.mult )
     SendMail( self.MethodSettings.to, self.MethodSettings.subject, self.MethodSettings.body )
 end
 

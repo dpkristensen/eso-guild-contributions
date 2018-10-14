@@ -11,6 +11,7 @@ local CLASS = GC.MethodManualClass()
 GC.MethodBankClass = CLASS
 
 local DEFAULT_AMOUNT = 1
+local DEFAULT_MULT = 1
 
 -- Return a string describing the history
 function CLASS:GetHistoryString()
@@ -30,13 +31,19 @@ function CLASS:Initialize( aGuildName, aGuildSettings )
                 type = "number",
                 default = DEFAULT_AMOUNT
             },
+            { -- Multiplier
+                name = GC.S( "MULTIPLIER" ),
+                var = "mult",
+                type = "number",
+                default = DEFAULT_MULT
+            },
         } )
 end
 
 -- Report that a contribution was given
 function CLASS:ReportContribution( aRule )
     local curGold = GetCurrencyAmount( CURT_MONEY )
-    local amount = self.MethodSettings.amount
+    local amount = self.MethodSettings.amount * self.MethodSettings.mult
 
     if( curGold < amount ) then
         GC.MsgP( "CONTRIBUTION_FAILED", tostring( curGold ).."g < "..tostring( amount ).."g!" )

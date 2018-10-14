@@ -11,6 +11,21 @@ local GC = GuildContributionsAddonContainer
 local CLASS = GC.Class()
 GC.MethodManualClass = CLASS
 
+local MIN_MULT = 0
+local MAX_MULT = 100
+
+function CLASS:ChangeMultiplier( aDelta )
+    local settings = self.MethodSettings
+    if( ( settings ) and
+        ( settings.mult ~= nil ) ) then
+        local newMult = settings.mult + aDelta
+        if( ( newMult >= MIN_MULT ) and
+            ( newMult <= MAX_MULT ) ) then
+            settings.mult = newMult
+        end
+    end
+end
+
 function CLASS:Initialize( aGuildName, aGuildSettings )
     self.MethodId = GC.MethodId.MANUAL
     self.GuildName = aGuildName
@@ -45,6 +60,28 @@ end
 -- Return whether the class has a GuiOptions structure
 function CLASS:HasOptions()
     return self.GuiOptions ~= nil
+end
+
+-- Return details about the contribution to be given as a table:
+--   text = Description of the contribution
+--   useMult = Whether a multiplier is used
+function CLASS:GetContributionDetailText()
+    local settings = self.MethodSettings
+
+    -- By default, if the method stores a value called "mult" and "amount", then let it be multiplied
+    if( ( settings ) and
+        ( settings.mult ~= nil ) and
+        ( settings.amount ~= nil ) ) then
+        return {
+            text = "|cffff00"..GC.FormatGold( settings.amount * settings.mult ).."|r",
+            useMult = true
+        }
+    end
+
+    return {
+        text = "|c3f3f3f"..GC.S( "NONE" ).."|r",
+        useMult = false
+    }
 end
 
 -- Return a string describing the history

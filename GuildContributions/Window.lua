@@ -58,6 +58,18 @@ local SETTINGS_TEX = {
     normal="esoui/art/menubar/menubar_mainmenu_up.dds"
 }
 
+local PLUS_TEX = {
+    down="esoui/art/buttons/plus_up.dds",
+    hover="esoui/art/buttons/plus_down.dds",
+    normal="esoui/art/buttons/plus_over.dds"
+}
+
+local MINUS_TEX = {
+    down="esoui/art/buttons/minus_up.dds",
+    hover="esoui/art/buttons/minus_down.dds",
+    normal="esoui/art/buttons/minus_over.dds"
+}
+
 local function SetBtnTextures( aBtn, aTex )
     aBtn:SetPressedTexture( aTex.down )
     aBtn:SetMouseOverTexture( aTex.hover )
@@ -88,6 +100,22 @@ end
 function CLASS:OnBtnLockClicked()
     self.Db:Set( "wposLock", not self.Db:Get( "wposLock" ) )
     self:UpdateMovable()
+end
+
+-- Handle Multiplier Down button clicks
+function CLASS:OnBtnXDownClicked()
+    local method = GC.MethodByGuildName[self.curGuild]
+    method:ChangeMultiplier( -1 )
+    self.SettingsGUI:Refresh()
+    self:UpdateText()
+end
+
+-- Handle Multiplier Up button clicks
+function CLASS:OnBtnXUpClicked()
+    local method = GC.MethodByGuildName[self.curGuild]
+    method:ChangeMultiplier( 1 )
+    self.SettingsGUI:Refresh()
+    self:UpdateText()
 end
 
 -- Handle settings button clicks
@@ -196,6 +224,32 @@ function CLASS:SetupControls()
     hBtnContribute:SetText( GC.S( "BTN_CONTRIBUTE" ) )
     self:SetHandler( hBtnContribute, "OnClicked", CLASS.OnBtnContributeClicked )
 
+    -- Detail
+    local hDetail = WINDOW_MANAGER:CreateControl( GC.ADDON_NAME.."_Detail", hWnd, CT_LABEL )
+    self.hDetail = hDetail
+    hDetail:SetAnchor( TOP, hBtnContribute, BOTTOM, 0, SPC / 2 )
+    hDetail:SetColor( 0.77, 0.76, 0.62 )
+    hDetail:SetFont( "ZoFontGameMedium" )
+    hDetail:SetText( "DETAIL" )
+    hDetail:SetWidth( hBtnContribute:GetWidth() - 40 )
+    hDetail:SetHorizontalAlignment( TEXT_ALIGN_CENTER )
+
+    -- Multiplier Up Button
+    local hBtnXUp = WINDOW_MANAGER:CreateControlFromVirtual( GC.ADDON_NAME.."_ButtonXUp", hWnd, "ZO_CheckButton" )
+    self.hBtnXUp = hBtnXUp
+    hBtnXUp:SetAnchor( LEFT, hDetail, RIGHT, 0, 0 )
+    hBtnXUp:SetDimensions( 15, 15 )
+    SetBtnTextures( hBtnXUp, PLUS_TEX )
+    self:SetHandler( hBtnXUp, "OnClicked", CLASS.OnBtnXUpClicked )
+
+    -- Multiplier Down Button
+    local hBtnXDown = WINDOW_MANAGER:CreateControlFromVirtual( GC.ADDON_NAME.."_ButtonXDown", hWnd, "ZO_CheckButton" )
+    self.hBtnXDown = hBtnXDown
+    hBtnXDown:SetAnchor( RIGHT, hDetail, LEFT, 0, 0 )
+    hBtnXDown:SetDimensions( 15, 15 )
+    SetBtnTextures( hBtnXDown, MINUS_TEX )
+    self:SetHandler( hBtnXDown, "OnClicked", CLASS.OnBtnXDownClicked )
+
     -- Update initial states
     self:UpdateCurGuild()
     self:UpdateMovable()
@@ -267,29 +321,42 @@ end
 function CLASS:UpdateText()
     local rule = GC.RuleByGuildName[self.curGuild]
     local ruleText = ""
+    local method = GC.MethodByGuildName[self.curGuild]
     local historyText = GC.S( "NONE" )
     local infoText = ""
     local btnEnabled = false
+    local hideMult = false
+    local detailText = ""
 
     local guild = self:GetCurGuildSettings()
     if( rule ~= nil ) then
         ruleText = GC.S( "OPTION_CONTRIBUTION_RULE" )..": "..GC.RuleNameById[rule.RuleId]
+        historyText = guild.history
         infoText = rule:GetWindowText()
         btnEnabled = rule:IsContributionNeeded()
+    end
+    if( method ~= nil ) then
+        detail = method:GetContributionDetailText()
+        detailText = detail.text
+        hideMult = not detail.useMult
     end
     self.hRule:SetText( ruleText )
     self.hHistory:SetText( GC.S( "HISTORY" )..": "..historyText )
     self.hInfo:SetText( infoText )
+    self.hDetail:SetText( detailText )
+    self.hBtnXDown:SetHidden( hideMult )
+    self.hBtnXUp:SetHidden( hideMult )
 
     self.hWnd:SetDimensions(
         ( SPC * 2 )
             + self.hRule:GetWidth(),
-        ( SPC * 5 )
+        ( SPC * 6.5 )
             + self.hTitle:GetHeight()
             + self.hRule:GetHeight()
             + self.hHistory:GetHeight()
             + self.hInfo:GetHeight()
             + self.hBtnContribute:GetHeight()
+            + self.hDetail:GetHeight()
         )
     self.hBtnContribute:SetEnabled( btnEnabled )
 end

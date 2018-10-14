@@ -289,3 +289,7 @@ function CLASS:InitOptions()
     self.Panel = GC.LAM:RegisterAddonPanel( self.LamWksp, self.PanelData )
     GC.LAM:RegisterOptionControls( self.LamWksp, self.OptionsTable )
 end
+
+function CLASS:Refresh()
+    CALLBACK_MANAGER:FireCallbacks( "LAM-RefreshPanel",  self.Panel )
+end
