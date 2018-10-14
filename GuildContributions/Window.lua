@@ -269,13 +269,17 @@ end
 
 -- Show/hide the window
 function CLASS:Show()
-    local isCursorShown = IsReticleHidden()
-    local isGuildSceneShown = SCENE_MANAGER:GetSceneGroup( "guildsSceneGroup" ):IsShowing()
-    local show = isCursorShown and (
-        isGuildSceneShown or
-        GC.IsGuildBankAvailable() or
-        GC.IsMailAvailable()
-        )
+    local show = false
+
+    local method = GC.MethodByGuildName[self.curGuild]
+    if SCENE_MANAGER:GetSceneGroup( "guildsSceneGroup" ):IsShowing() then
+        -- Always show with the Guild scene
+        show = true
+    elseif( method ~= nil ) then
+        show = method:CanShowContributeWindow()
+    end
+
+    show = show and IsReticleHidden() -- Only show when the cursor is available
 
     if( show ) then
         self:UpdateText()

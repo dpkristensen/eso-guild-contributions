@@ -14,6 +14,11 @@ GC.MethodManualClass = CLASS
 local MIN_MULT = 0
 local MAX_MULT = 100
 
+-- Return whether the delivery method is available.
+function CLASS:CanShowContributeWindow()
+    return true
+end
+
 function CLASS:ChangeMultiplier( aDelta )
     local settings = self.MethodSettings
     if( ( settings ) and

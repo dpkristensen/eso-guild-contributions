@@ -13,6 +13,10 @@ GC.MethodMailClass = CLASS
 local DEFAULT_AMOUNT = 1
 local DEFAULT_MULT = 1
 
+function CLASS:CanShowContributeWindow()
+    return GC.IsMailAvailable()
+end
+
 -- Return a string describing the history
 function CLASS:GetHistoryString()
     return GC.MethodManualClass.GetHistoryString( self )..
