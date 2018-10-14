@@ -23,6 +23,15 @@ local GUI_STATE_EVENT = {
     [EVENT_OPEN_GUILD_BANK] = true,
 }
 
+-- Return the current guild settings and set up default settings as needed
+function CLASS:GetCurGuildSettings()
+    local guild = self.Db:GetGuild( self.curGuild )
+    if( guild.history == nil ) then
+        guild.history = ""
+    end
+    return guild
+end
+
 function CLASS:Initialize( aDb, aSettingsGUI )
     self.Db = aDb
     self.SettingsGUI = aSettingsGUI
@@ -262,12 +271,9 @@ function CLASS:UpdateText()
     local infoText = ""
     local btnEnabled = false
 
+    local guild = self:GetCurGuildSettings()
     if( rule ~= nil ) then
         ruleText = GC.S( "OPTION_CONTRIBUTION_RULE" )..": "..GC.RuleNameById[rule.RuleId]
-        guild = self.Db:GetGuild( self.curGuild )
-        if( guild.history ~= nil ) then
-            historyText = guild.history
-        end
         infoText = rule:GetWindowText()
         btnEnabled = rule:IsContributionNeeded()
     end
