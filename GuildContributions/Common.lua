@@ -50,6 +50,17 @@ function GC.Enum( aContainer, aStartValue, ... )
     end
 end
 
+function GC.FormatGold( aValue )
+    local text = tostring( aValue )
+    if( aValue >= 1000000 ) then
+        text = tostring( aValue / 1000000 ).."M"
+    elseif( aValue >= 1000 ) then
+        text = tostring( aValue / 1000 ).."K"
+    end
+
+    return text.." "..GC.S( "GOLD" )
+end
+
 function GC.FireSignal( aSignal, ... )
     CALLBACK_MANAGER:FireCallbacks( GC.ADDON_NAME.."_"..aSignal, ... )
 end

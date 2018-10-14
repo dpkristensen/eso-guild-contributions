@@ -15,7 +15,7 @@ local DEFAULT_AMOUNT = 1
 -- Return a string describing the history
 function CLASS:GetHistoryString()
     return GC.MethodManualClass.GetHistoryString( self )..
-       " "..self.MethodSettings.amount.."g"
+       " "..GC.FormatGold( self.MethodSettings.amount )
 end
 
 function CLASS:Initialize( aGuildName, aGuildSettings )
