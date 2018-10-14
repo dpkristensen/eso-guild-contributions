@@ -89,7 +89,6 @@ function CLASS:ReportContribution( aRule )
         GC.ADDON_NAME,
         EVENT_MAIL_SEND_SUCCESS,
         function( aEventCode )
-            d( aRule )
             self:OnSendSuccess( aRule )
         end
         )
@@ -120,7 +119,6 @@ function CLASS:StopSend()
     EVENT_MANAGER:UnregisterForEvent( GC.ADDON_NAME, EVENT_MAIL_SEND_FAILED )
     self.sendInProgress = false
 end
-
 
 GC.MethodNameById[GC.MethodId.MAIL] = GC.S( "MAIL" )
 GC.MethodClassById[GC.MethodId.MAIL] = CLASS
