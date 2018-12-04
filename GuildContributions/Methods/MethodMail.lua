@@ -20,7 +20,7 @@ end
 -- Return a string describing the history
 function CLASS:GetHistoryString()
     return GC.MethodManualClass.GetHistoryString( self )..
-       " "..GC.FormatGold( self.MethodSettings.amount )
+       " "..GC.FormatGold( self.MethodSettings.amount * self.MethodSettings.mult )
 end
 
 function CLASS:Initialize( aGuildName, aGuildSettings )
