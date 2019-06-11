@@ -44,6 +44,18 @@ function CLASS:Initialize( aGuildName, aGuildSettings )
         } )
 end
 
+-- Handle money update
+function CLASS:OnMoneyUpdate( aRule, aNewMoney, aOldMoney, aReason )
+    GC.Debug("ON_MONEY_UPDATE: "..tostring(aOldMoney).."->"..tostring(aNewMoney).." ("..tostring(aReason)..")")
+    if( aReason ~= 51 ) then
+        return
+    end
+    EVENT_MANAGER:UnregisterForEvent( GC.ADDON_NAME, EVENT_MONEY_UPDATE )
+
+    -- Call the base method on success to finish up
+    GC.MethodManualClass.ReportContribution( self, aRule )
+end
+
 -- Report that a contribution was given
 function CLASS:ReportContribution( aRule )
     local curGold = GetCurrencyAmount( CURT_MONEY )
@@ -61,8 +73,14 @@ function CLASS:ReportContribution( aRule )
 
     DepositCurrencyIntoGuildBank( CURT_MONEY, amount )
 
-    -- Call the base method on success to finish up
-    GC.MethodManualClass.ReportContribution( self, aRule )
+    -- Set up callback for asynchronous result
+    EVENT_MANAGER:RegisterForEvent(
+        GC.ADDON_NAME,
+        EVENT_MONEY_UPDATE,
+        function( aEventCode, aNewMoney, aOldMoney, aReason )
+            self:OnMoneyUpdate( aRule, aNewMoney, aOldMoney, aReason )
+        end
+        )
 end
 
 GC.MethodNameById[GC.MethodId.BANK] = GC.S( "BANK" )
