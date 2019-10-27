@@ -6,9 +6,9 @@
 
 ## Title: |c00ff00GuildContributions|r
 ## Description: GuildContributions helps you support your guild financially.
-## Version: 1.01
+## Version: 1.02
 ## Author: okulo
-## APIVersion: 100028
+## APIVersion: 100029
 ## SavedVariables: GuildContributions_DB GuildContributions_DebugOpts
 ## DependsOn: LibAddonMenu-2.0 LibStub
 
