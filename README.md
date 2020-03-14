@@ -1,3 +1,7 @@
+# NO LONGER MAINTAINED
+
+I don't have time for ESO anymore, so I can't maintain this addon.  Anyone else is free to fork it and take over development.
+
 # Guild Contributions Addon
 
 This is an addon for Elder Scrolls Online to manage required contributions to guilds.
